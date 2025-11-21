@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Tools - Simple Web Server Tools</title>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+            --accent-color: #7209b7;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4cc9f0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+            padding: 3rem 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            flex: 1;
+        }
+        
+        .tool-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .tool-section h2 {
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+        
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e5ee;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .range-inputs {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .range-inputs input {
+            flex: 1;
+        }
+        
+        button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        button:hover {
+            background: var(--secondary-color);
+        }
+        
+        .result {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 5px;
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            font-size: 1.1rem;
+            word-break: break-all;
+        }
+        
+        .uuid-result {
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+        
+        footer {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: auto;
+        }
+        
+        .back-button {
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+        
+        .back-button:hover {
+            background: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Random Tools</h1>
+            <p>Generate random numbers and UUIDs</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <a href="../index.html" class="back-button">← Back to Tools</a>
+        
+        <!-- Random Number Generator -->
+        <div class="tool-section">
+            <h2>Random Number Generator</h2>
+            <div class="form-group">
+                <label>Range:</label>
+                <div class="range-inputs">
+                    <input type="number" id="minRange" placeholder="Minimum" value="1">
+                    <input type="number" id="maxRange" placeholder="Maximum" value="100">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="quantity">How many numbers?</label>
+                <input type="number" id="quantity" placeholder="Number of random numbers" value="1" min="1" max="100">
+            </div>
+            <button onclick="generateRandomNumbers()">Generate Random Numbers</button>
+            <div id="randomNumberResult" class="result" style="display: none;"></div>
+        </div>
+
+        <!-- UUID Generator -->
+        <div class="tool-section">
+            <h2>UUID Generator</h2>
+            <div class="form-group">
+                <label for="uuidCount">How many UUIDs?</label>
+                <input type="number" id="uuidCount" placeholder="Number of UUIDs" value="1" min="1" max="20">
+            </div>
+            <button onclick="generateUUIDs()">Generate UUIDs</button>
+            <div id="uuidResult" class="result" style="display: none;"></div>
+        </div>
+
+        <!-- Coin Flip -->
+        <div class="tool-section">
+            <h2>Coin Flip</h2>
+            <button onclick="flipCoin()">Flip Coin</button>
+            <div id="coinResult" class="result" style="display: none;"></div>
+        </div>
+
+        <!-- Dice Roll -->
+        <div class="tool-section">
+            <h2>Dice Roll</h2>
+            <div class="form-group">
+                <label for="diceCount">How many dice?</label>
+                <input type="number" id="diceCount" placeholder="Number of dice" value="1" min="1" max="10">
+            </div>
+            <button onclick="rollDice()">Roll Dice</button>
+            <div id="diceResult" class="result" style="display: none;"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 SimpleWebServer Project</p>
+        </div>
+    </footer>
+
+    <script>
+        function generateRandomNumbers() {
+            const min = parseInt(document.getElementById('minRange').value);
+            const max = parseInt(document.getElementById('maxRange').value);
+            const quantity = parseInt(document.getElementById('quantity').value);
+            
+            if (isNaN(min) || isNaN(max) || isNaN(quantity)) {
+                alert('Please enter valid numbers');
+                return;
+            }
+            
+            if (min >= max) {
+                alert('Minimum must be less than maximum');
+                return;
+            }
+            
+            if (quantity < 1 || quantity > 100) {
+                alert('Quantity must be between 1 and 100');
+                return;
+            }
+            
+            const numbers = [];
+            for (let i = 0; i < quantity; i++) {
+                numbers.push(Math.floor(Math.random() * (max - min + 1)) + min);
+            }
+            
+            const resultDiv = document.getElementById('randomNumberResult');
+            resultDiv.textContent = `Random numbers between ${min} and ${max}: ${numbers.join(', ')}`;
+            resultDiv.style.display = 'block';
+        }
+
+        function generateUUIDs() {
+            const count = parseInt(document.getElementById('uuidCount').value);
+            
+            if (isNaN(count) || count < 1 || count > 20) {
+                alert('Please enter a number between 1 and 20');
+                return;
+            }
+            
+            const uuids = [];
+            for (let i = 0; i < count; i++) {
+                uuids.push(generateUUID());
+            }
+            
+            const resultDiv = document.getElementById('uuidResult');
+            resultDiv.innerHTML = uuids.map(uuid => `<div class="uuid-result">${uuid}</div>`).join('');
+            resultDiv.style.display = 'block';
+        }
+
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        function flipCoin() {
+            const result = Math.random() < 0.5 ? 'Heads' : 'Tails';
+            const resultDiv = document.getElementById('coinResult');
+            resultDiv.textContent = `Coin flip result: ${result}`;
+            resultDiv.style.display = 'block';
+        }
+
+        function rollDice() {
+            const count = parseInt(document.getElementById('diceCount').value);
+            
+            if (isNaN(count) || count < 1 || count > 10) {
+                alert('Please enter a number between 1 and 10');
+                return;
+            }
+            
+            const rolls = [];
+            let total = 0;
+            
+            for (let i = 0; i < count; i++) {
+                const roll = Math.floor(Math.random() * 6) + 1;
+                rolls.push(roll);
+                total += roll;
+            }
+            
+            const resultDiv = document.getElementById('diceResult');
+            let resultText = `Dice rolls: ${rolls.join(', ')}`;
+            if (count > 1) {
+                resultText += ` | Total: ${total}`;
+            }
+            resultDiv.textContent = resultText;
+            resultDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/css/index.css">
+    <title>Simple Web Server Tools</title>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Simple Web Server Tools</h1>
+            <p>A collection of Math utilities served via Python</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="grid">
+            <div class="card" onclick="openTool('bmi')">
+                <h3>🏋️ BMI Calculator</h3>
+                <p>Calculate your Body Mass Index based on height and weight.</p>
+            </div>
+
+            <div class="card" onclick="openTool('loan')">
+                <h3>💰 Loan Calculator</h3>
+                <p>Estimate your monthly loan repayments with interest calculations.</p>
+            </div>
+
+            <div class="card" onclick="openTool('age')">
+                <h3>🎂 Age Calculator</h3>
+                <p>Find your exact age in years, months, and days.</p>
+            </div>
+
+            <div class="card" onclick="openTool('converter')">
+                <h3>🔁 Unit Converter</h3>
+                <p>Convert between different units of length, weight, temperature, etc.</p>
+            </div>
+
+            <div class="card" onclick="openTool('math')">
+                <h3>🧮 Math Tools</h3>
+                <p>Factorial, prime check, GCD, LCM & more mathematical operations.</p>
+            </div>
+
+            <div class="card" onclick="openTool('random')">
+                <h3>🎲 Random Tools</h3>
+                <p>Generate random numbers, UUIDs, or make random selections.</p>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 SimpleWebServer Project</p>
+        </div>
+    </footer>
+
+    <!-- Tool Preview Modal -->
+    <div id="toolModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle">Tool Preview</h2>
+            <p id="modalDescription">This tool is currently under development.</p>
+            <button onclick="closeModal()" 
+                    style="margin-top: 1rem; padding: 0.5rem 1rem; background: var(--primary-color); color: white; border: none; border-radius: 4px; cursor: pointer;">
+                Close
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function openTool(tool) {
+            const toolTitles = {
+                'bmi': 'BMI Calculator',
+                'loan': 'Loan Calculator',
+                'age': 'Age Calculator',
+                'converter': 'Unit Converter',
+                'math': 'Math Tools',
+                'random': 'Random Tools'
+            };
+            
+            const toolDescriptions = {
+                'bmi': 'Calculate your Body Mass Index to assess if your weight is healthy for your height.',
+                'loan': 'Calculate monthly payments, total interest, and amortization schedule for loans.',
+                'age': 'Determine your exact age or calculate the time between two dates.',
+                'converter': 'Convert between various units including length, weight, temperature, and more.',
+                'math': 'Perform mathematical calculations including factorial, prime checks, GCD, and LCM.',
+                'random': 'Generate random numbers, UUIDs, or make random selections from lists.'
+            };
+            
+            document.getElementById('modalTitle').textContent = toolTitles[tool];
+            document.getElementById('modalDescription').textContent = toolDescriptions[tool];
+            document.getElementById('toolModal').style.display = 'flex';
+
+            // redirection after 1 second
+            setTimeout(() => {
+                window.location.href = `/tools/${tool}.html`;
+            }, 1000);
+        }
+        
+        function closeModal() {
+            document.getElementById('toolModal').style.display = 'none';
+        }
+        
+        // Close modal when clicking outside the content
+        window.onclick = function(event) {
+            const modal = document.getElementById('toolModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>

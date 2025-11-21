@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Tools - Simple Web Server Tools</title>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+            --accent-color: #7209b7;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4cc9f0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+            padding: 3rem 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            flex: 1;
+        }
+        
+        .tool-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .tool-section h2 {
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+        
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e5ee;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        button:hover {
+            background: var(--secondary-color);
+        }
+        
+        .result {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 5px;
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            font-size: 1.1rem;
+        }
+        
+        .gcd-lcm-inputs {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .gcd-lcm-inputs input {
+            flex: 1;
+        }
+        
+        footer {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: auto;
+        }
+        
+        .back-button {
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+        
+        .back-button:hover {
+            background: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Math Tools</h1>
+            <p>Various mathematical calculations</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <a href="../index.html" class="back-button">← Back to Tools</a>
+        
+        <!-- Factorial Calculator -->
+        <div class="tool-section">
+            <h2>Factorial Calculator</h2>
+            <div class="form-group">
+                <label for="factorialInput">Enter a number:</label>
+                <input type="number" id="factorialInput" placeholder="Enter a positive integer" min="0" max="100">
+            </div>
+            <button onclick="calculateFactorial()">Calculate Factorial</button>
+            <div id="factorialResult" class="result" style="display: none;"></div>
+        </div>
+
+        <!-- Prime Number Checker -->
+        <div class="tool-section">
+            <h2>Prime Number Checker</h2>
+            <div class="form-group">
+                <label for="primeInput">Enter a number:</label>
+                <input type="number" id="primeInput" placeholder="Enter a positive integer" min="2">
+            </div>
+            <button onclick="checkPrime()">Check Prime</button>
+            <div id="primeResult" class="result" style="display: none;"></div>
+        </div>
+
+        <!-- GCD Calculator -->
+        <div class="tool-section">
+            <h2>GCD Calculator</h2>
+            <div class="form-group">
+                <label>Enter two numbers:</label>
+                <div class="gcd-lcm-inputs">
+                    <input type="number" id="gcdInput1" placeholder="First number" min="1">
+                    <input type="number" id="gcdInput2" placeholder="Second number" min="1">
+                </div>
+            </div>
+            <button onclick="calculateGCD()">Calculate GCD</button>
+            <div id="gcdResult" class="result" style="display: none;"></div>
+        </div>
+
+        <!-- LCM Calculator -->
+        <div class="tool-section">
+            <h2>LCM Calculator</h2>
+            <div class="form-group">
+                <label>Enter two numbers:</label>
+                <div class="gcd-lcm-inputs">
+                    <input type="number" id="lcmInput1" placeholder="First number" min="1">
+                    <input type="number" id="lcmInput2" placeholder="Second number" min="1">
+                </div>
+            </div>
+            <button onclick="calculateLCM()">Calculate LCM</button>
+            <div id="lcmResult" class="result" style="display: none;"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 SimpleWebServer Project</p>
+        </div>
+    </footer>
+
+    <script>
+        function calculateFactorial() {
+            const num = parseInt(document.getElementById('factorialInput').value);
+            
+            if (isNaN(num) || num < 0) {
+                alert('Please enter a valid positive integer');
+                return;
+            }
+            
+            if (num > 100) {
+                alert('Please enter a number less than or equal to 100');
+                return;
+            }
+            
+            let result = BigInt(1);
+            for (let i = 2; i <= num; i++) {
+                result *= BigInt(i);
+            }
+            
+            const resultDiv = document.getElementById('factorialResult');
+            resultDiv.textContent = `${num}! = ${result.toLocaleString()}`;
+            resultDiv.style.display = 'block';
+        }
+
+        function checkPrime() {
+            const num = parseInt(document.getElementById('primeInput').value);
+            
+            if (isNaN(num) || num < 2) {
+                alert('Please enter a valid integer greater than 1');
+                return;
+            }
+            
+            let isPrime = true;
+            
+            if (num === 2) {
+                isPrime = true;
+            } else if (num % 2 === 0) {
+                isPrime = false;
+            } else {
+                // Check odd divisors up to sqrt(num)
+                for (let i = 3; i * i <= num; i += 2) {
+                    if (num % i === 0) {
+                        isPrime = false;
+                        break;
+                    }
+                }
+            }
+            
+            const resultDiv = document.getElementById('primeResult');
+            resultDiv.textContent = `${num} is ${isPrime ? 'a prime number' : 'not a prime number'}`;
+            resultDiv.style.display = 'block';
+        }
+
+        function calculateGCD() {
+            const a = parseInt(document.getElementById('gcdInput1').value);
+            const b = parseInt(document.getElementById('gcdInput2').value);
+            
+            if (isNaN(a) || isNaN(b) || a < 1 || b < 1) {
+                alert('Please enter valid positive integers');
+                return;
+            }
+            
+            const gcd = (x, y) => y === 0 ? x : gcd(y, x % y);
+            const result = gcd(Math.abs(a), Math.abs(b));
+            
+            const resultDiv = document.getElementById('gcdResult');
+            resultDiv.textContent = `GCD(${a}, ${b}) = ${result}`;
+            resultDiv.style.display = 'block';
+        }
+
+        function calculateLCM() {
+            const a = parseInt(document.getElementById('lcmInput1').value);
+            const b = parseInt(document.getElementById('lcmInput2').value);
+            
+            if (isNaN(a) || isNaN(b) || a < 1 || b < 1) {
+                alert('Please enter valid positive integers');
+                return;
+            }
+            
+            const gcd = (x, y) => y === 0 ? x : gcd(y, x % y);
+            const lcm = Math.abs(a * b) / gcd(Math.abs(a), Math.abs(b));
+            
+            const resultDiv = document.getElementById('lcmResult');
+            resultDiv.textContent = `LCM(${a}, ${b}) = ${lcm}`;
+            resultDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
