@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit Converter - Simple Web Server Tools</title>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+            --accent-color: #7209b7;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4cc9f0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+            padding: 3rem 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            flex: 1;
+        }
+        
+        .converter {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e5ee;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            margin-bottom: 0.5rem;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .conversion-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .conversion-row input, .conversion-row select {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            width: 100%;
+        }
+        
+        button:hover {
+            background: var(--secondary-color);
+        }
+        
+        .result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 5px;
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        footer {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: auto;
+        }
+        
+        .back-button {
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+        
+        .back-button:hover {
+            background: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Unit Converter</h1>
+            <p>Convert between different units</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <a href="../index.html" class="back-button">← Back to Tools</a>
+        
+        <div class="converter">
+            <div class="form-group">
+                <label for="category">Conversion Category</label>
+                <select id="category" onchange="updateUnits()">
+                    <option value="length">Length</option>
+                    <option value="weight">Weight</option>
+                    <option value="temperature">Temperature</option>
+                    <option value="area">Area</option>
+                    <option value="volume">Volume</option>
+                </select>
+            </div>
+            
+            <div class="conversion-row">
+                <input type="number" id="inputValue" placeholder="Enter value" step="any">
+                <select id="fromUnit"></select>
+            </div>
+            
+            <div class="conversion-row">
+                <input type="text" id="outputValue" placeholder="Result" readonly>
+                <select id="toUnit"></select>
+            </div>
+            
+            <button onclick="convertUnits()">Convert</button>
+            
+            <div id="result" class="result" style="display: none;"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 SimpleWebServer Project</p>
+        </div>
+    </footer>
+
+    <script>
+        const units = {
+            length: [
+                { value: 'mm', name: 'Millimeters', factor: 0.001 },
+                { value: 'cm', name: 'Centimeters', factor: 0.01 },
+                { value: 'm', name: 'Meters', factor: 1 },
+                { value: 'km', name: 'Kilometers', factor: 1000 },
+                { value: 'in', name: 'Inches', factor: 0.0254 },
+                { value: 'ft', name: 'Feet', factor: 0.3048 },
+                { value: 'yd', name: 'Yards', factor: 0.9144 },
+                { value: 'mi', name: 'Miles', factor: 1609.34 }
+            ],
+            weight: [
+                { value: 'mg', name: 'Milligrams', factor: 0.000001 },
+                { value: 'g', name: 'Grams', factor: 0.001 },
+                { value: 'kg', name: 'Kilograms', factor: 1 },
+                { value: 't', name: 'Metric Tons', factor: 1000 },
+                { value: 'oz', name: 'Ounces', factor: 0.0283495 },
+                { value: 'lb', name: 'Pounds', factor: 0.453592 }
+            ],
+            temperature: [
+                { value: 'c', name: 'Celsius' },
+                { value: 'f', name: 'Fahrenheit' },
+                { value: 'k', name: 'Kelvin' }
+            ],
+            area: [
+                { value: 'mm2', name: 'Square Millimeters', factor: 0.000001 },
+                { value: 'cm2', name: 'Square Centimeters', factor: 0.0001 },
+                { value: 'm2', name: 'Square Meters', factor: 1 },
+                { value: 'ha', name: 'Hectares', factor: 10000 },
+                { value: 'km2', name: 'Square Kilometers', factor: 1000000 },
+                { value: 'in2', name: 'Square Inches', factor: 0.00064516 },
+                { value: 'ft2', name: 'Square Feet', factor: 0.092903 },
+                { value: 'ac', name: 'Acres', factor: 4046.86 },
+                { value: 'mi2', name: 'Square Miles', factor: 2589988.11 }
+            ],
+            volume: [
+                { value: 'ml', name: 'Milliliters', factor: 0.001 },
+                { value: 'l', name: 'Liters', factor: 1 },
+                { value: 'm3', name: 'Cubic Meters', factor: 1000 },
+                { value: 'in3', name: 'Cubic Inches', factor: 0.0163871 },
+                { value: 'ft3', name: 'Cubic Feet', factor: 28.3168 },
+                { value: 'gal', name: 'Gallons (US)', factor: 3.78541 },
+                { value: 'qt', name: 'Quarts (US)', factor: 0.946353 }
+            ]
+        };
+
+        function updateUnits() {
+            const category = document.getElementById('category').value;
+            const fromUnit = document.getElementById('fromUnit');
+            const toUnit = document.getElementById('toUnit');
+            
+            fromUnit.innerHTML = '';
+            toUnit.innerHTML = '';
+            
+            units[category].forEach(unit => {
+                const option1 = document.createElement('option');
+                option1.value = unit.value;
+                option1.textContent = unit.name;
+                fromUnit.appendChild(option1);
+                
+                const option2 = document.createElement('option');
+                option2.value = unit.value;
+                option2.textContent = unit.name;
+                toUnit.appendChild(option2);
+            });
+            
+            // Set different default units for conversion
+            if (units[category].length > 1) {
+                toUnit.selectedIndex = 1;
+            }
+        }
+
+        function convertUnits() {
+            const inputValue = parseFloat(document.getElementById('inputValue').value);
+            const category = document.getElementById('category').value;
+            const fromUnit = document.getElementById('fromUnit').value;
+            const toUnit = document.getElementById('toUnit').value;
+            
+            if (!inputValue && inputValue !== 0) {
+                alert('Please enter a value to convert');
+                return;
+            }
+            
+            let result;
+            
+            if (category === 'temperature') {
+                result = convertTemperature(inputValue, fromUnit, toUnit);
+            } else {
+                const fromFactor = units[category].find(u => u.value === fromUnit).factor;
+                const toFactor = units[category].find(u => u.value === toUnit).factor;
+                result = (inputValue * fromFactor) / toFactor;
+            }
+            
+            document.getElementById('outputValue').value = result.toFixed(6);
+            
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                ${inputValue} ${getUnitName(category, fromUnit)} = ${result.toFixed(4)} ${getUnitName(category, toUnit)}
+            `;
+            resultDiv.style.display = 'block';
+        }
+
+        function convertTemperature(value, from, to) {
+            // Convert to Celsius first
+            let celsius;
+            if (from === 'c') celsius = value;
+            else if (from === 'f') celsius = (value - 32) * 5/9;
+            else if (from === 'k') celsius = value - 273.15;
+            
+            // Convert from Celsius to target
+            if (to === 'c') return celsius;
+            else if (to === 'f') return (celsius * 9/5) + 32;
+            else if (to === 'k') return celsius + 273.15;
+        }
+
+        function getUnitName(category, unitValue) {
+            const unit = units[category].find(u => u.value === unitValue);
+            return unit ? unit.name : unitValue;
+        }
+
+        // Initialize units on page load
+        updateUnits();
+    </script>
+</body>
+</html>
