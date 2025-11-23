@@ -1,0 +1,45 @@
+/* styles.css - small theme on top of Bootstrap */
+:root{
+  --brand: #0d6efd;
+  --muted: #6c757d;
+  --card-radius: 12px;
+}
+
+body {
+  background: linear-gradient(180deg,#f8fafc, #ffffff);
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+.header {
+  padding: 2rem 0;
+  text-align: center;
+}
+
+.card-tool {
+  border-radius: var(--card-radius);
+  transition: transform .14s ease, box-shadow .14s ease;
+  cursor: pointer;
+}
+.card-tool:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 30px rgba(13,110,253,0.12);
+}
+
+.tool-panel {
+  padding: 1.25rem;
+}
+
+.result-card {
+  border-radius: 10px;
+  padding: 1rem;
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+}
+
+.small-muted { color: var(--muted); font-size: .95rem; }
+.footer {
+  padding: 2rem 0;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
