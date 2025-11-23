@@ -3,111 +3,786 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="static/css/index.css">
-    <title>Simple Web Server Tools</title>
+    <title>Financial Tools Server</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: var(--primary-color);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+        }
+        
+        .tool-card {
+            background: var(--light-color);
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .tool-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+        }
+        
+        button {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+            font-weight: 600;
+        }
+        
+        button:hover {
+            background: var(--primary-color);
+        }
+        
+        .result {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            border-radius: 8px;
+            background: white;
+            border-left: 4px solid var(--success-color);
+            display: none;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .result h4 {
+            color: var(--success-color);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .result-item {
+            margin: 0.5rem 0;
+            padding: 0.75rem;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border-left: 3px solid var(--secondary-color);
+        }
+        
+        footer {
+            background: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .error {
+            border-left-color: var(--accent-color) !important;
+        }
+        
+        .error h4 {
+            color: var(--accent-color) !important;
+        }
+        
+        .risk-low { background: #27ae60 !important; }
+        .risk-moderate { background: #f39c12 !important; }
+        .risk-high { background: #e67e22 !important; }
+        .risk-very-high { background: #e74c3c !important; }
+        
+        .tool-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .input-group > * {
+            flex: 1;
+        }
+        
+        .risk-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+        
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        
+        .loading::after {
+            content: " Calculating...";
+            font-style: italic;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <h1>Simple Web Server Tools</h1>
-            <p>A collection of Math utilities served via Python</p>
-        </div>
-    </header>
-
     <div class="container">
-        <section class="grid">
-            <div class="card" onclick="openTool('bmi')">
-                <h3>🏋️ BMI Calculator</h3>
-                <p>Calculate your Body Mass Index based on height and weight.</p>
+        <header>
+            <h1>Financial Tools Server</h1>
+            <p>Comprehensive financial calculations and advisory services</p>
+        </header>
+
+        <div class="tools-grid">
+            <!-- Simple Interest Calculator -->
+            <div class="tool-card">
+                <h3>Simple Interest Calculator</h3>
+                <p class="tool-description">Calculate interest earned or paid on a principal amount over time</p>
+                
+                <div class="form-group">
+                    <label for="si_principal">Principal Amount ($)</label>
+                    <input type="number" id="si_principal" placeholder="1000" step="0.01">
+                </div>
+                
+                <div class="form-group">
+                    <label for="si_rate">Annual Interest Rate (%)</label>
+                    <input type="number" id="si_rate" placeholder="5" step="0.01">
+                </div>
+                
+                <div class="form-group">
+                    <label for="si_time">Time Period</label>
+                    <div class="input-group">
+                        <input type="number" id="si_time" placeholder="2" step="0.01">
+                        <select id="si_time_unit">
+                            <option value="years">Years</option>
+                            <option value="months">Months</option>
+                            <option value="days">Days</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button onclick="calculateSimpleInterest()">Calculate Interest</button>
+                <div id="si_result" class="result"></div>
             </div>
 
-            <div class="card" onclick="openTool('loan')">
-                <h3>💰 Loan Calculator</h3>
-                <p>Estimate your monthly loan repayments with interest calculations.</p>
+            <!-- Compound Interest Calculator -->
+            <div class="tool-card">
+                <h3>Compound Interest Calculator</h3>
+                <p class="tool-description">Calculate interest on interest for investments or savings</p>
+                
+                <div class="form-group">
+                    <label for="ci_principal">Principal Amount ($)</label>
+                    <input type="number" id="ci_principal" placeholder="1000" step="0.01">
+                </div>
+                
+                <div class="form-group">
+                    <label for="ci_rate">Annual Interest Rate (%)</label>
+                    <input type="number" id="ci_rate" placeholder="5" step="0.01">
+                </div>
+                
+                <div class="form-group">
+                    <label for="ci_time">Time (Years)</label>
+                    <input type="number" id="ci_time" placeholder="2" step="0.01">
+                </div>
+                
+                <div class="form-group">
+                    <label for="ci_compounding">Compounding Frequency</label>
+                    <select id="ci_compounding">
+                        <option value="yearly">Yearly</option>
+                        <option value="quarterly">Quarterly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="daily">Daily</option>
+                    </select>
+                </div>
+                
+                <button onclick="calculateCompoundInterest()">Calculate Compound Interest</button>
+                <div id="ci_result" class="result"></div>
             </div>
 
-            <div class="card" onclick="openTool('age')">
-                <h3>🎂 Age Calculator</h3>
-                <p>Find your exact age in years, months, and days.</p>
+            <!-- Loan EMI Calculator -->
+            <div class="tool-card">
+                <h3>Loan EMI Calculator</h3>
+                <p class="tool-description">Calculate monthly payments for loans and mortgages</p>
+                
+                <div class="form-group">
+                    <label for="emi_principal">Loan Amount ($)</label>
+                    <input type="number" id="emi_principal" placeholder="100000" step="0.01">
+                </div>
+                
+                <div class="form-group">
+                    <label for="emi_rate">Annual Interest Rate (%)</label>
+                    <input type="number" id="emi_rate" placeholder="5" step="0.01">
+                </div>
+                
+                <div class="form-group">
+                    <label for="emi_tenure">Loan Tenure</label>
+                    <div class="input-group">
+                        <input type="number" id="emi_tenure" placeholder="20">
+                        <select id="emi_tenure_unit">
+                            <option value="years">Years</option>
+                            <option value="months">Months</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button onclick="calculateLoanEMI()">Calculate EMI</button>
+                <div id="emi_result" class="result"></div>
             </div>
 
-            <div class="card" onclick="openTool('converter')">
-                <h3>🔁 Unit Converter</h3>
-                <p>Convert between different units of length, weight, temperature, etc.</p>
+            <!-- Savings Goal Calculator -->
+            <div class="tool-card">
+                <h3>Savings Goal Calculator</h3>
+                <p class="tool-description">Plan your savings and see when you'll reach your financial goals</p>
+                
+                <div class="form-group">
+                    <label for="sg_target">Target Amount ($)</label>
+                    <input type="number" id="sg_target" placeholder="50000" step="0.01">
+                </div>
+                
+                <div class="form-group">
+                    <label for="sg_current">Current Savings ($)</label>
+                    <input type="number" id="sg_current" placeholder="10000" step="0.01">
+                </div>
+                
+                <div class="form-group">
+                    <label for="sg_monthly">Monthly Contribution ($)</label>
+                    <input type="number" id="sg_monthly" placeholder="500" step="0.01">
+                </div>
+                
+                <div class="form-group">
+                    <label for="sg_rate">Annual Interest Rate (%)</label>
+                    <input type="number" id="sg_rate" placeholder="4" step="0.01">
+                </div>
+                
+                <button onclick="calculateSavingsGoal()">Calculate Timeline</button>
+                <div id="sg_result" class="result"></div>
             </div>
 
-            <div class="card" onclick="openTool('math')">
-                <h3>🧮 Math Tools</h3>
-                <p>Factorial, prime check, GCD, LCM & more mathematical operations.</p>
+            <!-- Currency Converter -->
+            <div class="tool-card">
+                <h3>Currency Converter</h3>
+                <p class="tool-description">Convert between major world currencies with real-time rates</p>
+                
+                <div class="form-group">
+                    <label for="cc_amount">Amount</label>
+                    <input type="number" id="cc_amount" placeholder="100" step="0.01">
+                </div>
+                
+                <div class="form-group">
+                    <label for="cc_from">From Currency</label>
+                    <select id="cc_from">
+                        <option value="USD">USD - US Dollar</option>
+                        <option value="EUR">EUR - Euro</option>
+                        <option value="GBP">GBP - British Pound</option>
+                        <option value="JPY">JPY - Japanese Yen</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="cc_to">To Currency</label>
+                    <select id="cc_to">
+                        <option value="EUR">EUR - Euro</option>
+                        <option value="USD">USD - US Dollar</option>
+                        <option value="GBP">GBP - British Pound</option>
+                        <option value="JPY">JPY - Japanese Yen</option>
+                    </select>
+                </div>
+                
+                <button onclick="convertCurrency()">Convert</button>
+                <div id="cc_result" class="result"></div>
             </div>
 
-            <div class="card" onclick="openTool('random')">
-                <h3>🎲 Random Tools</h3>
-                <p>Generate random numbers, UUIDs, or make random selections.</p>
+            <!-- Investment Return Calculator -->
+            <div class="tool-card">
+                <h3>Investment Return Calculator</h3>
+                <p class="tool-description">Project future value of investments with regular contributions</p>
+                
+                <div class="form-group">
+                    <label for="ir_initial">Initial Investment ($)</label>
+                    <input type="number" id="ir_initial" placeholder="5000" step="0.01">
+                </div>
+                
+                <div class="form-group">
+                    <label for="ir_monthly">Monthly Contribution ($)</label>
+                    <input type="number" id="ir_monthly" placeholder="100" step="0.01">
+                </div>
+                
+                <div class="form-group">
+                    <label for="ir_rate">Annual Return Rate (%)</label>
+                    <input type="number" id="ir_rate" placeholder="7" step="0.01">
+                </div>
+                
+                <div class="form-group">
+                    <label for="ir_years">Investment Period (Years)</label>
+                    <input type="number" id="ir_years" placeholder="10" step="0.5">
+                </div>
+                
+                <button onclick="calculateInvestmentReturn()">Calculate Returns</button>
+                <div id="ir_result" class="result"></div>
             </div>
-        </section>
-    </div>
 
-    <footer>
-        <div class="container">
-            <p>© 2025 SimpleWebServer Project</p>
+            <!-- Loan Advisory Tool -->
+            <div class="tool-card">
+                <h3>Loan Advisory Analysis</h3>
+                <p class="tool-description">Get personalized advice on whether you should take a loan based on your financial situation</p>
+                
+                <div class="form-group">
+                    <label for="la_loan_amount">Loan Amount ($)</label>
+                    <input type="number" id="la_loan_amount" placeholder="25000" step="0.01">
+                </div>
+                
+                <div class="form-group">
+                    <label for="la_interest_rate">Annual Interest Rate (%)</label>
+                    <input type="number" id="la_interest_rate" placeholder="7.5" step="0.01">
+                </div>
+                
+                <div class="form-group">
+                    <label for="la_loan_term">Loan Term (Years)</label>
+                    <input type="number" id="la_loan_term" placeholder="5" min="1" max="30">
+                </div>
+                
+                <div class="form-group">
+                    <label for="la_purpose">Loan Purpose</label>
+                    <select id="la_purpose">
+                        <option value="home_loan">Home Purchase</option>
+                        <option value="car_loan">Car Purchase</option>
+                        <option value="education">Education</option>
+                        <option value="debt_consolidation">Debt Consolidation</option>
+                        <option value="business">Business</option>
+                        <option value="medical">Medical Expenses</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="la_monthly_income">Monthly Income ($)</label>
+                    <input type="number" id="la_monthly_income" placeholder="5000" step="0.01">
+                </div>
+                
+                <div class="form-group">
+                    <label for="la_monthly_expenses">Monthly Expenses ($)</label>
+                    <input type="number" id="la_monthly_expenses" placeholder="3000" step="0.01">
+                </div>
+                
+                <div class="form-group">
+                    <label for="la_existing_loans">Existing Loan EMIs ($)</label>
+                    <input type="number" id="la_existing_loans" placeholder="500" step="0.01">
+                </div>
+                
+                <div class="form-group">
+                    <label for="la_emergency_fund">Emergency Fund ($)</label>
+                    <input type="number" id="la_emergency_fund" placeholder="10000" step="0.01">
+                </div>
+                
+                <div class="form-group">
+                    <label for="la_credit_score">Credit Score</label>
+                    <input type="number" id="la_credit_score" placeholder="700" min="300" max="850">
+                </div>
+                
+                <button onclick="analyzeLoanAdvisory()">Get Loan Advice</button>
+                <div id="la_result" class="result"></div>
+            </div>
         </div>
-    </footer>
 
-    <!-- Tool Preview Modal -->
-    <div id="toolModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h2 id="modalTitle">Tool Preview</h2>
-            <p id="modalDescription">This tool is currently under development.</p>
-            <button onclick="closeModal()" 
-                    style="margin-top: 1rem; padding: 0.5rem 1rem; background: var(--primary-color); color: white; border: none; border-radius: 4px; cursor: pointer;">
-                Close
-            </button>
-        </div>
+        <footer>
+            <p>© 2024 Financial Tools Server | Built with Python</p>
+            <p style="margin-top: 0.5rem; opacity: 0.8;">Comprehensive financial calculations for better decision making</p>
+        </footer>
     </div>
 
     <script>
-        function openTool(tool) {
-            const toolTitles = {
-                'bmi': 'BMI Calculator',
-                'loan': 'Loan Calculator',
-                'age': 'Age Calculator',
-                'converter': 'Unit Converter',
-                'math': 'Math Tools',
-                'random': 'Random Tools'
-            };
-            
-            const toolDescriptions = {
-                'bmi': 'Calculate your Body Mass Index to assess if your weight is healthy for your height.',
-                'loan': 'Calculate monthly payments, total interest, and amortization schedule for loans.',
-                'age': 'Determine your exact age or calculate the time between two dates.',
-                'converter': 'Convert between various units including length, weight, temperature, and more.',
-                'math': 'Perform mathematical calculations including factorial, prime checks, GCD, and LCM.',
-                'random': 'Generate random numbers, UUIDs, or make random selections from lists.'
-            };
-            
-            document.getElementById('modalTitle').textContent = toolTitles[tool];
-            document.getElementById('modalDescription').textContent = toolDescriptions[tool];
-            document.getElementById('toolModal').style.display = 'flex';
-
-            // redirection after 1 second
-            setTimeout(() => {
-                window.location.href = `/tools/${tool}.html`;
-            }, 1000);
-        }
-        
-        function closeModal() {
-            document.getElementById('toolModal').style.display = 'none';
-        }
-        
-        // Close modal when clicking outside the content
-        window.onclick = function(event) {
-            const modal = document.getElementById('toolModal');
-            if (event.target === modal) {
-                closeModal();
+        // Enhanced API call function with error handling
+        async function callTool(endpoint, params) {
+            try {
+                const queryString = new URLSearchParams(params).toString();
+                const response = await fetch(`/tools/${endpoint}?${queryString}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error calling tool:', error);
+                return {
+                    status: 'error',
+                    message: `Failed to connect to server: ${error.message}`
+                };
             }
         }
+
+        // Display regular calculation results
+        function displayResult(elementId, data) {
+            const resultDiv = document.getElementById(elementId);
+            
+            if (data.status === 'success') {
+                let html = `<h4>Calculation Results</h4>`;
+                
+                for (const [key, value] of Object.entries(data)) {
+                    if (key !== 'status' && key !== 'calculation_type') {
+                        const formattedKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                        let displayValue = value;
+                        
+                        // Format percentages
+                        if (typeof value === 'number' && (key.includes('ratio') || key.includes('rate'))) {
+                            displayValue = (value * 100).toFixed(1) + '%';
+                        }
+                        // Format currency
+                        else if (typeof value === 'number' && (key.includes('amount') || key.includes('interest') || key.includes('payment') || key.includes('emi') || key.includes('income'))) {
+                            displayValue = '$' + value.toLocaleString();
+                        }
+                        // Format time units
+                        else if (key.includes('months_needed') || key.includes('years_needed')) {
+                            displayValue = value.toFixed(1);
+                        }
+                        
+                        html += `<div class="result-item"><strong>${formattedKey}:</strong> ${displayValue}</div>`;
+                    }
+                }
+                
+                resultDiv.innerHTML = html;
+                resultDiv.className = 'result';
+            } else {
+                resultDiv.innerHTML = `<h4>Error</h4><div class="result-item">${data.message}</div>`;
+                resultDiv.className = 'result error';
+            }
+            
+            resultDiv.style.display = 'block';
+        }
+
+        // Display loan advisory results with special formatting
+        function displayLoanAdvisoryResult(elementId, data) {
+            const resultDiv = document.getElementById(elementId);
+            
+            if (data.status === 'success') {
+                const analysis = data.analysis;
+                const riskClass = `risk-${analysis.risk_level.toLowerCase().replace(' ', '-')}`;
+                
+                let html = `
+                    <div style="border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; 
+                                color: white;" class="${riskClass}">
+                        <h3 style="margin: 0 0 1rem 0; color: white;">${analysis.recommendation}</h3>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong>Risk Level:</strong> ${analysis.risk_level}<br>
+                                <strong>Confidence:</strong> ${analysis.confidence}
+                            </div>
+                            <div style="font-size: 1.5rem; font-weight: bold;">${getRiskSymbol(analysis.risk_level)}</div>
+                        </div>
+                    </div>
+                    
+                    <h4>Financial Analysis</h4>
+                    <div class="result-item"><strong>Monthly EMI:</strong> $${analysis.monthly_emi.toLocaleString()}</div>
+                    <div class="result-item"><strong>Total Interest:</strong> $${analysis.total_interest.toLocaleString()}</div>
+                    <div class="result-item"><strong>Total Loan Cost:</strong> $${analysis.total_loan_cost.toLocaleString()}</div>
+                    <div class="result-item"><strong>Debt-to-Income Ratio:</strong> ${(analysis.debt_to_income_ratio * 100).toFixed(1)}%</div>
+                    <div class="result-item"><strong>EMI-to-Income Ratio:</strong> ${(analysis.emi_to_income_ratio * 100).toFixed(1)}%</div>
+                    <div class="result-item"><strong>Disposable Income After EMI:</strong> $${analysis.disposable_income_after_emi.toLocaleString()}</div>
+                `;
+                
+                if (data.risk_factors && data.risk_factors.length > 0) {
+                    html += `<h4>Risk Factors</h4>`;
+                    data.risk_factors.forEach(factor => {
+                        html += `<div class="result-item" style="color: #e74c3c;">• ${factor}</div>`;
+                    });
+                }
+                
+                if (data.recommendations && data.recommendations.length > 0) {
+                    html += `<h4>Recommendations</h4>`;
+                    data.recommendations.forEach(rec => {
+                        html += `<div class="result-item" style="color: #27ae60;">• ${rec}</div>`;
+                    });
+                }
+                
+                if (data.purpose_analysis) {
+                    html += `<h4>Purpose Analysis</h4>`;
+                    html += `<div class="result-item"><strong>Good For:</strong> ${data.purpose_analysis.good_for.join(', ')}</div>`;
+                    html += `<div class="result-item"><strong>Considerations:</strong> ${data.purpose_analysis.considerations.join(', ')}</div>`;
+                }
+                
+                if (data.alternatives && data.alternatives.length > 0) {
+                    html += `<h4>Alternatives to Consider</h4>`;
+                    data.alternatives.forEach(alt => {
+                        html += `<div class="result-item" style="color: #3498db;">• ${alt}</div>`;
+                    });
+                }
+                
+                resultDiv.innerHTML = html;
+                resultDiv.className = 'result';
+            } else {
+                resultDiv.innerHTML = `<h4>Error</h4><div class="result-item">${data.message}</div>`;
+                resultDiv.className = 'result error';
+            }
+            
+            resultDiv.style.display = 'block';
+        }
+
+        function getRiskSymbol(riskLevel) {
+            switch(riskLevel) {
+                case 'LOW': return '✓';
+                case 'MODERATE': return '!';
+                case 'HIGH': return '▲';
+                case 'VERY HIGH': return '✗';
+                default: return '?';
+            }
+        }
+
+        // Button loading state management
+        function setButtonLoading(button, isLoading) {
+            if (isLoading) {
+                button.classList.add('loading');
+                button.disabled = true;
+            } else {
+                button.classList.remove('loading');
+                button.disabled = false;
+            }
+        }
+
+        // Tool calculation functions
+        async function calculateSimpleInterest() {
+            const button = event.target;
+            setButtonLoading(button, true);
+            
+            const params = {
+                principal: document.getElementById('si_principal').value,
+                rate: document.getElementById('si_rate').value,
+                time: document.getElementById('si_time').value,
+                time_unit: document.getElementById('si_time_unit').value
+            };
+            
+            console.log("Calling simple interest with:", params);
+            const result = await callTool('simple_interest', params);
+            displayResult('si_result', result);
+            setButtonLoading(button, false);
+        }
+
+        async function calculateCompoundInterest() {
+            const button = event.target;
+            setButtonLoading(button, true);
+            
+            const params = {
+                principal: document.getElementById('ci_principal').value,
+                rate: document.getElementById('ci_rate').value,
+                time: document.getElementById('ci_time').value,
+                compounding: document.getElementById('ci_compounding').value
+            };
+            
+            console.log("Calling compound interest with:", params);
+            const result = await callTool('compound_interest', params);
+            displayResult('ci_result', result);
+            setButtonLoading(button, false);
+        }
+
+        async function calculateLoanEMI() {
+            const button = event.target;
+            setButtonLoading(button, true);
+            
+            const params = {
+                principal: document.getElementById('emi_principal').value,
+                rate: document.getElementById('emi_rate').value,
+                tenure: document.getElementById('emi_tenure').value,
+                tenure_unit: document.getElementById('emi_tenure_unit').value
+            };
+            
+            console.log("Calling loan EMI with:", params);
+            const result = await callTool('loan_emi', params);
+            displayResult('emi_result', result);
+            setButtonLoading(button, false);
+        }
+
+        async function calculateSavingsGoal() {
+            const button = event.target;
+            setButtonLoading(button, true);
+            
+            const params = {
+                target_amount: document.getElementById('sg_target').value,
+                current_savings: document.getElementById('sg_current').value,
+                monthly_contribution: document.getElementById('sg_monthly').value,
+                rate: document.getElementById('sg_rate').value
+            };
+            
+            console.log("Calling savings goal with:", params);
+            const result = await callTool('savings_goal', params);
+            displayResult('sg_result', result);
+            setButtonLoading(button, false);
+        }
+
+        async function convertCurrency() {
+            const button = event.target;
+            setButtonLoading(button, true);
+            
+            const params = {
+                amount: document.getElementById('cc_amount').value,
+                from_currency: document.getElementById('cc_from').value,
+                to_currency: document.getElementById('cc_to').value
+            };
+            
+            console.log("Calling currency converter with:", params);
+            const result = await callTool('currency_converter', params);
+            displayResult('cc_result', result);
+            setButtonLoading(button, false);
+        }
+
+        async function calculateInvestmentReturn() {
+            const button = event.target;
+            setButtonLoading(button, true);
+            
+            const params = {
+                initial_investment: document.getElementById('ir_initial').value,
+                monthly_contribution: document.getElementById('ir_monthly').value,
+                rate: document.getElementById('ir_rate').value,
+                years: document.getElementById('ir_years').value
+            };
+            
+            console.log("Calling investment return with:", params);
+            const result = await callTool('investment_return', params);
+            displayResult('ir_result', result);
+            setButtonLoading(button, false);
+        }
+
+        async function analyzeLoanAdvisory() {
+            const button = event.target;
+            setButtonLoading(button, true);
+            
+            const params = {
+                loan_amount: document.getElementById('la_loan_amount').value,
+                interest_rate: document.getElementById('la_interest_rate').value,
+                loan_term: document.getElementById('la_loan_term').value,
+                purpose: document.getElementById('la_purpose').value,
+                monthly_income: document.getElementById('la_monthly_income').value,
+                monthly_expenses: document.getElementById('la_monthly_expenses').value,
+                existing_loans: document.getElementById('la_existing_loans').value,
+                emergency_fund: document.getElementById('la_emergency_fund').value,
+                credit_score: document.getElementById('la_credit_score').value
+            };
+            
+            console.log("Calling loan advisory with:", params);
+            const result = await callTool('loan_advisory', params);
+            displayLoanAdvisoryResult('la_result', result);
+            setButtonLoading(button, false);
+        }
+
+        // Add some sample data for demonstration
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set some sample values for demonstration
+            document.getElementById('si_principal').value = '1000';
+            document.getElementById('si_rate').value = '5';
+            document.getElementById('si_time').value = '2';
+            
+            document.getElementById('ci_principal').value = '1000';
+            document.getElementById('ci_rate').value = '5';
+            document.getElementById('ci_time').value = '2';
+            
+            document.getElementById('emi_principal').value = '100000';
+            document.getElementById('emi_rate').value = '5';
+            document.getElementById('emi_tenure').value = '20';
+            
+            document.getElementById('sg_target').value = '50000';
+            document.getElementById('sg_current').value = '10000';
+            document.getElementById('sg_monthly').value = '500';
+            document.getElementById('sg_rate').value = '4';
+            
+            document.getElementById('cc_amount').value = '100';
+            
+            document.getElementById('ir_initial').value = '5000';
+            document.getElementById('ir_monthly').value = '100';
+            document.getElementById('ir_rate').value = '7';
+            document.getElementById('ir_years').value = '10';
+            
+            document.getElementById('la_loan_amount').value = '25000';
+            document.getElementById('la_interest_rate').value = '7.5';
+            document.getElementById('la_loan_term').value = '5';
+            document.getElementById('la_monthly_income').value = '5000';
+            document.getElementById('la_monthly_expenses').value = '3000';
+            document.getElementById('la_existing_loans').value = '500';
+            document.getElementById('la_emergency_fund').value = '10000';
+            document.getElementById('la_credit_score').value = '700';
+            
+            console.log("Financial Tools Server loaded successfully!");
+            console.log("All tools are ready to use. Click any button to test.");
+        });
     </script>
 </body>
 </html>
