@@ -1,45 +1,138 @@
-/* styles.css - small theme on top of Bootstrap */
-:root{
+
+:root {
   --brand: #0d6efd;
+  --brand-dark: #0a58ca;
   --muted: #6c757d;
-  --card-radius: 12px;
+  --card-radius: 16px;
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.35);
 }
+
 
 body {
-  background: linear-gradient(180deg,#ecedee, #a9a4a4);
-  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  margin: 0;
+  min-height: 100vh;
+  background: 
+      linear-gradient(180deg, rgba(0,0,0,0.2), rgba(0,0,0,0.45)),
+      url("https://images.unsplash.com/photo-1517816428104-797678c7cf5e?auto=format&fit=crop&w=1600&q=80");
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  color: #1a1a1a;
 }
 
+/*  smooth fade */
+* {
+  transition: all 0.2s ease-in-out;
+}
+
+/* 
+   Header Section
+*/
 .header {
-  padding: 2rem 0;
+  padding: 3rem 1rem;
   text-align: center;
+  color: white;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.4);
 }
 
+.header h1 {
+  font-size: 2.8rem;
+  font-weight: 700;
+}
+
+.header p {
+  font-size: 1.1rem;
+  color: #f1f1f1;
+}
+
+/* 
+   Tool Cards (Home Page)
+*/
 .card-tool {
   border-radius: var(--card-radius);
-  transition: transform .14s ease, box-shadow .14s ease;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px);
+  padding: 1.5rem;
   cursor: pointer;
+  transition: transform .2s ease, box-shadow .2s ease;
 }
+
 .card-tool:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 10px 30px rgba(13,110,253,0.12);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.25);
 }
 
+/* 
+   Tool Panel Pages (BMI, Age, Loan etc.)
+*/
 .tool-panel {
-  padding: 1.25rem;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px);
+  border-radius: var(--card-radius);
+  padding: 2rem;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
 }
 
+/* Tool titles */
+.tool-panel h2 {
+  font-weight: 600;
+  color: white;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+/* 
+   Result Card
+ */
 .result-card {
-  border-radius: 10px;
-  padding: 1rem;
-  background: #fbf8f8;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+  border-radius: 14px;
+  padding: 1.5rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
 }
 
-.small-muted { color: var(--muted); font-size: .95rem; }
-.footer {
-  padding: 2rem 0;
-  text-align: center;
+.result-card h4 {
+  font-weight: 600;
+}
+
+/* 
+   Muted Text
+ */
+.small-muted {
   color: var(--muted);
+  font-size: 0.92rem;
+}
+
+/* 
+   Buttons
+*/
+.btn-custom {
+  background: var(--brand);
+  border: none;
+  border-radius: 10px;
+  padding: 0.6rem 1.4rem;
+  color: white;
+  font-weight: 500;
+  box-shadow: 0 4px 14px rgba(13,110,253,0.4);
+}
+
+.btn-custom:hover {
+  background: var(--brand-dark);
+  box-shadow: 0 6px 20px rgba(13,110,253,0.55);
+}
+
+/*
+   Footer
+-*/
+.footer {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: #eee;
   font-size: 0.9rem;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
 }

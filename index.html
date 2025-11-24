@@ -5,69 +5,138 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Math Tools Dashboard</title>
+
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="assets/css/styles.css" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <style>
+        body {
+            background-image: url("assets/images/img1.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto;
+            color: rgb(18, 16, 16);
+        }
+
+        .dashboard-wrapper {
+            padding-top: 4rem;
+            padding-bottom: 4rem;
+        }
+
+        .header h1 {
+            font-weight: 700;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
+        }
+
+        .header p {
+            color: #0f0e0e;
+            font-size: 2.1rem;
+        }
+
+        /* Glassmorphism Card */
+        .card-tool {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(14px);
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 1.4rem;
+            transition: all 0.25s ease-in-out;
+        }
+
+        .card-tool:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
+            background: rgba(255, 255, 255, 0.22);
+        }
+
+        h5 {
+            color: rgb(5, 0, 0);
+        }
+
+        .small-muted {
+            color: #0e0101;
+        }
+
+        .footer {
+            margin-top: 4rem;
+            color: #150303;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+        }
+    </style>
 </head>
 
 <body>
 
-    <div class="container">
-        <header class="header my-4">
-            <h1 class="display-6">Math Tools </h1>
-            <p class="small-muted">A simple collection of calculators.</p>
+    <div class="container dashboard-wrapper">
+
+        <!-- HEADER -->
+        <header class="header text-center mb-5">
+            <h1 class="display-5">Math Tools Dashboard</h1>
+            <p>A lightweight collection of everyday calculators.</p>
         </header>
 
-        <div class="row g-4">
-            <div class="col-sm-6 col-lg-4">
-                <a href="bmi.html" class="text-decoration-none text-dark">
-                    <div class="card card-tool p-3">
+        <!-- TOOLS GRID -->
+        <div class="row g-4 justify-content-center">
+
+            <!-- BMI -->
+            <div class="col-sm-6 col-lg-4 col-xl-3">
+                <a href="bmi.html" class="text-decoration-none">
+                    <div class="card-tool">
                         <div class="d-flex align-items-center">
-                            <div class="me-3 fs-1 text-primary">⚖️</div>
+                            <div class="me-3 fs-1">⚖️</div>
                             <div>
                                 <h5 class="mb-1">BMI Calculator</h5>
-                                <div class="small-muted">Calculate BMI from height & weight</div>
+                                <div class="small-muted">Height & weight analysis</div>
                             </div>
                         </div>
                     </div>
                 </a>
             </div>
 
-            <div class="col-sm-6 col-lg-4">
-                <a href="age.html" class="text-decoration-none text-dark">
-                    <div class="card card-tool p-3">
+            <!-- AGE -->
+            <div class="col-sm-6 col-lg-4 col-xl-3">
+                <a href="age.html" class="text-decoration-none">
+                    <div class="card-tool">
                         <div class="d-flex align-items-center">
-                            <div class="me-3 fs-1 text-success">🎂</div>
+                            <div class="me-3 fs-1">🎂</div>
                             <div>
                                 <h5 class="mb-1">Age Calculator</h5>
-                                <div class="small-muted">Get age in years, months & days</div>
+                                <div class="small-muted">Find exact age breakdown</div>
                             </div>
                         </div>
                     </div>
                 </a>
             </div>
 
-            <div class="col-sm-6 col-lg-4">
-                <a href="loan.html" class="text-decoration-none text-dark">
-                    <div class="card card-tool p-3">
+            <!-- LOAN -->
+            <div class="col-sm-6 col-lg-4 col-xl-3">
+                <a href="loan.html" class="text-decoration-none">
+                    <div class="card-tool">
                         <div class="d-flex align-items-center">
-                            <div class="me-3 fs-1 text-warning">💰</div>
+                            <div class="me-3 fs-1">💰</div>
                             <div>
                                 <h5 class="mb-1">Loan / Math Calculator</h5>
-                                <div class="small-muted">EMI, simple interest & totals</div>
+                                <div class="small-muted">Interest, totals & EMI</div>
                             </div>
                         </div>
                     </div>
                 </a>
             </div>
+
         </div>
 
-        <footer class="footer">
-            <div>Made with 💙 • Serve with <code>python run_server.py</code></div>
+        <!-- FOOTER -->
+        <footer class="footer text-center">
+            <div>Made with 💙 • Serving via <code>python run_server.py</code></div>
         </footer>
+
     </div>
 
     <script src="assets/js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 
 </html>
